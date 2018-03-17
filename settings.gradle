@@ -2,4 +2,5 @@ rootProject.name = 'master-thesis-microservice'
 include 'config-server'
 include 'eureka-server'
 include 'notification-service'
+include 'gateway-service'
 

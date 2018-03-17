@@ -1,0 +1,33 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.5.6/angular-resource.min.js"></script>
+    <title>Microservice App</title>
+</head>
+<body ng-app="myApp" ng-controller="mainCtrl">
+    <script>
+        var app = angular.module('myApp', ["ngResource"]);
+        app.controller('mainCtrl', function($scope, $resource, $http) {
+            $scope.user = { id:0, name:"Dariusz Webber" };
+            $scope.notifications = $resource("/notifications/:notId", { notId:'@notificationId' });
+            $scope.getFoo = function(){
+                $scope.notification = $scope.notifications.get({ notId:$scope.user.id });
+            }
+            $scope.getMessage = function(){
+                $http({ method: 'GET', url: 'notifications/message'})
+                    .then(function(response){
+                    $scope.message = response;
+                });
+            }
+        });
+    </script>
+    <div>
+        <h1>Foo Details</h1>
+        <span>{{notification.id}}</span>
+        <span>{{notification.name}}</span>
+        <span>{{message}}</span>
+        <a href="#" ng-click="getFoo()">New Notification</a>
+        <a href="#" ng-click="getMessage()">New Message</a>
+    </div>
+</body>
+</html>

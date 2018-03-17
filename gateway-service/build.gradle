@@ -1,0 +1,11 @@
+dependencies {
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
+    compile 'org.springframework.cloud:spring-cloud-starter-config'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+}
+
+// To mowi zeby kazde strzaly byly przekierowywane na resourcesDir
+// W devtoolsach resourcy sa trzymane w jakims kontenerze (moze tomcata) i z tamtad hostowane
+bootRun {
+    sourceResources sourceSets.main
+}
