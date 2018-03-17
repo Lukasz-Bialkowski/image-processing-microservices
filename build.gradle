@@ -7,23 +7,36 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')
+	}
 }
 
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
+	group = 'uni.master'
+	sourceCompatibility = 1.8
 
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/milestone" }
+	}
 
+	ext {
+		springCloudVersion = 'Finchley.M8'
+	}
 
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
 
-
-
-
-// SUBPROJECTS CONFIGURATION
-//subprojects {
-//
-//
-//}
+	dependencies {
+		compile 'org.springframework.boot:spring-boot-starter-actuator'
+	}
+}
