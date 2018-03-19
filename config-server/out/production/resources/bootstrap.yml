@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+      config:
+        server:
+          git:
+            uri: /home/lukas/Software/master-thesis-microservice/config-server/config-repo
+
+# That's the default config-server port
+server:
+  port: 8888
