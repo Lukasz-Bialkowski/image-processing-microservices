@@ -2,25 +2,61 @@ version: '2'
 services:
   eureka-server:
     build: eureka-server
-    port:
-      - "8761"
+      expose:
+        - "8761"
+      ports:
+        - 8761:8761
+
+  config-server:
+    container_name: config-server   # Container name
+    build:
+      context: ./config-server/     # Dockerfile path
+      dockerfile: Dockerfile        # Dockerfile name
+    image: config-server:latest     # Image name
+    expose:
+      - 8888
+    networks:
+      - spring-cloud-network        # Named networks name specified below
+    volumes:
+      - config-repo:/opt/uni-master-microservice/config-repo # Named volume name specified below
+    logging:
+      driver: json-file             # Default is ‘json-file’ driver (alternatively ‘syslog’)
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service/
+      dockerfile: Dockerfile
+    image: notification-service:latest
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+    environment:
+      SPRING_APPLICATION_JSON: '{"spring": {"cloud": {"config": {"uri": "http://config-server:8888"}}}}'
+    expose:
+      - 10001
+    ports:
+      - 10001:10001
+    networks:
+      - spring-cloud-network
+    links:
+      - config-server:config-server
+    depends_on:
+      - config-server
+    logging:
+      driver: json-file
 
   gateway-service:
     build: gateway-service
     ports:
-      - "80"
-
-  notification-service:
-    build: notification-service
-    ports:
-      - "10001"
+      - 80
 
   turbine-service:
     build: turbine-service
     ports:
-      - "9999"
+      - 9999
 
-  config-server:
-    build: config-server
-    ports:
-      - "8888"
+networks:
+  spring-cloud-network:       # Named network
+    driver: bridge
+volumes:
+  config-repo:                # Named volume
+    external: true

@@ -3,5 +3,5 @@ include 'config-server'
 include 'eureka-server'
 include 'notification-service'
 include 'gateway-service'
-include 'turbine-service'
+include 'monitor-service'
 
