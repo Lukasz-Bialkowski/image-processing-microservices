@@ -1,0 +1,26 @@
+version: '2'
+services:
+  eureka-server:
+    build: eureka-server
+    port:
+      - "8761"
+
+  gateway-service:
+    build: gateway-service
+    ports:
+      - "80"
+
+  notification-service:
+    build: notification-service
+    ports:
+      - "10001"
+
+  turbine-service:
+    build: turbine-service
+    ports:
+      - "9999"
+
+  config-server:
+    build: config-server
+    ports:
+      - "8888"

@@ -4,3 +4,10 @@ spring:
 
 server:
   port: 9999
+
+applications: turbinecluster
+
+turbine:
+  aggregator:
+    cluster-config: ${applications}
+  app-config: ${applications}
