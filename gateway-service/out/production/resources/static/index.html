@@ -13,13 +13,21 @@
             $scope.getFoo = function(){
                 $scope.notification = $scope.notifications.get({ notId:$scope.user.id });
             }
+            $scope.getMessage = function(){
+                $http({ method: 'GET', url: 'notifications/message'})
+                    .then(function(response){
+                    $scope.message = response;
+                });
+            }
         });
     </script>
     <div>
         <h1>Foo Details</h1>
         <span>{{notification.id}}</span>
         <span>{{notification.name}}</span>
+        <span>{{message}}</span>
         <a href="#" ng-click="getFoo()">New Notification</a>
+        <a href="#" ng-click="getMessage()">New Message</a>
     </div>
 </body>
 </html>
