@@ -1,11 +1,19 @@
 version: '2'
 services:
   eureka-server:
-    build: eureka-server
-      expose:
-        - "8761"
-      ports:
-        - 8761:8761
+    container_name: eureka-server
+    build:
+      context: ./eureka-server/
+      dockerfile: Dockerfile
+    image: eureka-server:latest
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+    networks:
+      - spring-cloud-network
+    logging:
+      driver: json-file
 
   config-server:
     container_name: config-server   # Container name
@@ -17,6 +25,8 @@ services:
       - 8888
     networks:
       - spring-cloud-network        # Named networks name specified below
+    depends_on:
+      - eureka-server
     volumes:
       - config-repo:/opt/uni-master-microservice/config-repo # Named volume name specified below
     logging:
@@ -45,18 +55,63 @@ services:
       driver: json-file
 
   gateway-service:
-    build: gateway-service
-    ports:
+    container_name: gateway-service
+    build:
+      context: ./gateway-service/
+      dockerfile: Dockerfile
+    image: gateway-service:latest
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+    expose:
       - 80
-
-  turbine-service:
-    build: turbine-service
     ports:
+      - 80:80
+    networks:
+      - spring-cloud-network
+    logging:
+      driver: json-file
+    depends_on:
+      - config-server
+
+  monitor-service:
+    container_name: monitor-service
+    build:
+      context: ./monitor-service/
+      dockerfile: Dockerfile
+    image: monitor-service:latest
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+    expose:
       - 9999
+    ports:
+      - 9999:9999
+    networks:
+      - spring-cloud-network
+    logging:
+      driver: json-file
+    depends_on:
+      - config-server
+
+  worker-service:
+    container_name: worker-service
+    build:
+      context: ./worker-service/
+      dockerfile: Dockerfile
+    image: worker-service:latest
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+    expose:
+      - 8100
+    ports:
+      - 8100:8100
+    networks:
+      - spring-cloud-network
+    logging:
+      driver: json-file
+    depends_on:
+      - config-server
 
 networks:
   spring-cloud-network:       # Named network
     driver: bridge
+
 volumes:
   config-repo:                # Named volume
-    external: true
+    external: true            # Have to be created prior to docker-compose up docker volume create --name=spring-cloud-config-repo

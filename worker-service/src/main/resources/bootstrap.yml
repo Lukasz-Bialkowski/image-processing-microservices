@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: worker-service
+server:
+  port: 8100
