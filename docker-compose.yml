@@ -6,6 +6,7 @@ services:
       context: ./eureka-server/
       dockerfile: Dockerfile
     image: eureka-server:latest
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
     expose:
       - 8761
     ports:
@@ -21,8 +22,11 @@ services:
       context: ./config-server/     # Dockerfile path
       dockerfile: Dockerfile        # Dockerfile name
     image: config-server:latest     # Image name
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
     expose:
       - 8888
+    ports:
+      - 8888:8888
     networks:
       - spring-cloud-network        # Named networks name specified below
     depends_on:
@@ -39,74 +43,72 @@ services:
       dockerfile: Dockerfile
     image: notification-service:latest
     entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
-    environment:
-      SPRING_APPLICATION_JSON: '{"spring": {"cloud": {"config": {"uri": "http://config-server:8888"}}}}'
     expose:
       - 10001
     ports:
       - 10001:10001
     networks:
       - spring-cloud-network
-    links:
-      - config-server:config-server
     depends_on:
       - config-server
     logging:
       driver: json-file
 
-  gateway-service:
-    container_name: gateway-service
-    build:
-      context: ./gateway-service/
-      dockerfile: Dockerfile
-    image: gateway-service:latest
-    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
-    expose:
-      - 80
-    ports:
-      - 80:80
-    networks:
-      - spring-cloud-network
-    logging:
-      driver: json-file
-    depends_on:
-      - config-server
-
-  monitor-service:
-    container_name: monitor-service
-    build:
-      context: ./monitor-service/
-      dockerfile: Dockerfile
-    image: monitor-service:latest
-    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
-    expose:
-      - 9999
-    ports:
-      - 9999:9999
-    networks:
-      - spring-cloud-network
-    logging:
-      driver: json-file
-    depends_on:
-      - config-server
-
-  worker-service:
-    container_name: worker-service
-    build:
-      context: ./worker-service/
-      dockerfile: Dockerfile
-    image: worker-service:latest
-    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
-    expose:
-      - 8100
-    ports:
-      - 8100:8100
-    networks:
-      - spring-cloud-network
-    logging:
-      driver: json-file
-    depends_on:
-      - config-server
+#  gateway-service:
+#    container_name: gateway-service
+#    build:
+#      context: ./gateway-service/
+#      dockerfile: Dockerfile
+#    image: gateway-service:latest
+#    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+#    expose:
+#      - 80
+#    ports:
+#      - 80:80
+#    networks:
+#      - spring-cloud-network
+#    logging:
+#      driver: json-file
+#    depends_on:
+#      - config-server
+#
+#  monitor-service:
+#    container_name: monitor-service
+#    build:
+#      context: ./monitor-service/
+#      dockerfile: Dockerfile
+#    image: monitor-service:latest
+#    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+#    expose:
+#      - 9999
+#    ports:
+#      - 9999:9999
+#    networks:
+#      - spring-cloud-network
+#    logging:
+#      driver: json-file
+#    depends_on:
+#      - config-server
+#
+#  worker-service:
+#    container_name: worker-service
+#    build:
+#      context: ./worker-service/
+#      dockerfile: Dockerfile
+#    image: worker-service:latest
+#    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+#    expose:
+#      - 8100
+#    ports:
+#      - 8100:8100
+#    networks:
+#      - spring-cloud-network
+#    logging:
+#      driver: json-file
+#    depends_on:
+#      - config-server
+#    environment:
+#      SPRING_APPLICATION_JSON: '{ "spring": { "cloud": { "config": { "uri": "http://config-server:8888" } }, "application": { "name": "notification-service" } }, "server": { "port": 10001 } }'
 
 networks:
   spring-cloud-network:       # Named network

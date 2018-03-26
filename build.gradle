@@ -36,7 +36,24 @@ subprojects {
 		}
 	}
 
-	dependencies {
-		compile 'org.springframework.boot:spring-boot-starter-actuator'
+}
+
+task clean {
+	dependsOn subprojects.clean
+	doLast {
+		println 'Build allsubprojects task :clean completed'
 	}
+}
+
+task build {
+	dependsOn subprojects.build
+	doLast {
+		println 'Build allsubprojects task :build completed'
+	}
+}
+
+task dockerComposeUp(type:Exec, dependsOn: build) {
+	workingDir './'
+	ignoreExitValue true
+	commandLine "docker-compose", "up", "--build"
 }

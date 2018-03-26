@@ -5,8 +5,18 @@ spring:
     config:
       server:
         git:
-          uri: /home/lukas/Software/master-thesis-microservice/config-server/config-repo
+#          uri: /home/lukas/Software/master-thesis-microservice/config-server/config-repo
+          uri: /opt/uni-master-microservice/config-repo
+      discovery:
+        enabled: true
+        service-id: config-server
 
 # That's the default config-server port
 server:
   port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+#      defaultZone: http://localhost:8761/eureka/

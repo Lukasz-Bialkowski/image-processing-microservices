@@ -1,6 +1,39 @@
+project.ext {
+    APP_NAME="notification-service"
+    SERVER_PORT=10001
+}
+
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+}
+
+task dockerClean(dependsOn: build) {
+    doLast {
+        exec {
+            workingDir './'
+            ignoreExitValue true
+            commandLine "docker", "rm", "-f", "$project.APP_NAME"
+        }
+        exec {
+            workingDir './'
+            ignoreExitValue true
+            commandLine "docker", "rmi", "$project.APP_NAME"
+        }
+    }
+}
+
+task dockerBuild(type:Exec, dependsOn: dockerClean) {
+    workingDir './'
+    ignoreExitValue true
+    commandLine "docker", "build", "--tag=$project.APP_NAME:latest", "--rm=true", "."
+}
+
+task dockerRun(type: Exec, dependsOn: dockerBuild) {
+    workingDir './'
+    ignoreExitValue true
+    commandLine "docker", "run", "--name=$project.APP_NAME", "--publish=$project.SERVER_PORT:$project.SERVER_PORT", "$project.APP_NAME:latest"
 }
