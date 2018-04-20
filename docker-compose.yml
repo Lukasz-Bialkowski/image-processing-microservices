@@ -44,9 +44,9 @@ services:
     image: worker-service:latest
     entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
     expose:
-      - 8100
+      - 8090
     ports:
-      - 8100:8100
+      - 8090:8090
     networks:
       - spring-cloud-network
     logging:

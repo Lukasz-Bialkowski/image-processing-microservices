@@ -1,6 +1,6 @@
 project.ext {
     APP_NAME="worker-service"
-    SERVER_PORT=8100
+    SERVER_PORT=8090
 }
 
 dependencies {

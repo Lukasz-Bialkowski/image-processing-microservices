@@ -38,7 +38,7 @@ app.controller('mainCtrl', function($scope, $resource, $state, $stateParams) {
     $scope.params = $stateParams;
     $scope.search = "";
 
-    $scope.appResource = $resource("/som/app/:operation/:image", {}, {
+    $scope.appResource = $resource("/app/:operation/:image", {}, {
         getImage: {method: 'GET'},
         getImages: {method: 'GET', isArray: true},
         pwd: {method: 'GET'},
