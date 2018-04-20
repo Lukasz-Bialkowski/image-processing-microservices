@@ -7,12 +7,12 @@ app.config(function($stateProvider) {
         .state('main', {
             url: '/main',
             controller:'mainCtrl',
-            templateUrl: 'views/main.html'
+            templateUrl: '../views/main.html'
         })
         .state('task', {
             url: '/task/{imageId}',
             controller:'mainCtrl',
-            templateUrl: 'views/result.html',
+            templateUrl: '../views/result.html',
             params : {
                 id:null,
                 ipAddress:null,
@@ -27,7 +27,7 @@ app.config(function($stateProvider) {
         .state('history', {
             url: '/history',
             controller:'mainCtrl',
-            templateUrl: 'views/history.html'
+            templateUrl: '../views/history.html'
         });
 });
 
@@ -38,7 +38,7 @@ app.controller('mainCtrl', function($scope, $resource, $state, $stateParams) {
     $scope.params = $stateParams;
     $scope.search = "";
 
-    $scope.appResource = $resource("/som/app/:operation/:image", {}, {
+    $scope.appResource = $resource("/app/:operation/:image", {}, {
         getImage: {method: 'GET'},
         getImages: {method: 'GET', isArray: true},
         pwd: {method: 'GET'},

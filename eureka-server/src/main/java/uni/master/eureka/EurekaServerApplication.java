@@ -17,7 +17,7 @@ public class EurekaServerApplication {
 }
 
 @RefreshScope
-@RestController
+@RestController(value = "/somepath")
 class EurekaRestController {
     @Value("${parent-message:zkodu}")
     private String message;

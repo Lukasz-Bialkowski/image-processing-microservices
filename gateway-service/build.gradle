@@ -1,3 +1,8 @@
+project.ext {
+    APP_NAME="gateway-service"
+    SERVER_PORT=8081
+}
+
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
     compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -9,4 +14,31 @@ dependencies {
 // W devtoolsach resourcy sa trzymane w jakims kontenerze (moze tomcata) i z tamtad hostowane
 bootRun {
     sourceResources sourceSets.main
+}
+
+task dockerClean(dependsOn: build) {
+    doLast {
+        exec {
+            workingDir './'
+            ignoreExitValue true
+            commandLine "docker", "rm", "-f", "$project.APP_NAME"
+        }
+        exec {
+            workingDir './'
+            ignoreExitValue true
+            commandLine "docker", "rmi", "$project.APP_NAME"
+        }
+    }
+}
+
+task dockerBuild(type:Exec, dependsOn: dockerClean) {
+    workingDir './'
+    ignoreExitValue true
+    commandLine "docker", "build", "--tag=$project.APP_NAME:latest", "--rm=true", "."
+}
+
+task dockerRun(type: Exec, dependsOn: dockerBuild) {
+    workingDir './'
+    ignoreExitValue true
+    commandLine "docker", "run", "--name=$project.APP_NAME", "--publish=$project.SERVER_PORT:$project.SERVER_PORT", "$project.APP_NAME:latest"
 }

@@ -2,7 +2,5 @@ spring:
   application:
     name: eureka-server
 
-# DOMYŚLNY PORT DLA EUREKI
-# Jeśli go zmienimy to należy w każdym kliencie podać nowy adres i port do eureki
 server:
   port: 8761
