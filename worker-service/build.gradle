@@ -1,6 +1,14 @@
 project.ext {
-    APP_NAME="worker-service"
-    SERVER_PORT=8090
+    CONTAINER_PORT=8090
+    IMAGE_NAME="worker-service"
+
+    if (project.hasProperty('host_port')) {
+        HOST_PORT="$host_port"
+    } else { HOST_PORT=8090 }
+
+    if (project.hasProperty('container_name')) {
+        CONTAINER_NAME="$container_name"
+    } else { CONTAINER_NAME="worker-service" }
 }
 
 dependencies {
@@ -21,12 +29,12 @@ task dockerClean(dependsOn: build) {
         exec {
             workingDir './'
             ignoreExitValue true
-            commandLine "docker", "rm", "-f", "$project.APP_NAME"
+            commandLine "docker", "rm", "-f", "$project.CONTAINER_NAME"
         }
         exec {
             workingDir './'
             ignoreExitValue true
-            commandLine "docker", "rmi", "$project.APP_NAME"
+            commandLine "docker", "rmi", "$project.IMAGE_NAME"
         }
     }
 }
@@ -34,11 +42,11 @@ task dockerClean(dependsOn: build) {
 task dockerBuild(type:Exec, dependsOn: dockerClean) {
     workingDir './'
     ignoreExitValue true
-    commandLine "docker", "build", "--tag=$project.APP_NAME:latest", "--rm=true", "."
+    commandLine "docker", "build", "--tag=$project.IMAGE_NAME:latest", "--rm=true", "."
 }
 
 task dockerRun(type: Exec, dependsOn: dockerBuild) {
     workingDir './'
     ignoreExitValue true
-    commandLine "docker", "run", "--name=$project.APP_NAME", "--publish=$project.SERVER_PORT:$project.SERVER_PORT", "$project.APP_NAME:latest"
+    commandLine "docker", "run", "--name=$project.CONTAINER_NAME", "--publish=$project.HOST_PORT:$project.CONTAINER_PORT", "$project.IMAGE_NAME:latest"
 }

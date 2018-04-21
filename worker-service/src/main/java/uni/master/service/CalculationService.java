@@ -1,6 +1,9 @@
 package uni.master.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import uni.master.entity.ColorRGB;
 import uni.master.entity.ColorXY;
@@ -8,9 +11,15 @@ import uni.master.entity.ColorXY;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class CalculationService {
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     private double countDistance(ColorXY color1, ColorXY color2) {
         return Math.sqrt(
@@ -68,7 +77,9 @@ public class CalculationService {
         /**
          * Initialization
          * */
-        BufferedImage sourceImage = ImageIO.read(new ClassPathResource("static/assets/"+ imageId).getFile());
+        Resource res = resourceLoader.getResource("classpath:static/assets/" + imageId);
+        BufferedImage sourceImage = ImageIO.read(res.getInputStream());
+//        BufferedImage sourceImage = ImageIO.read(new ClassPathResource("static/assets/"+ imageId).getFile());
         int w = sourceImage.getWidth();
         int h = sourceImage.getHeight();
         BufferedImage trainingImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -120,15 +131,15 @@ public class CalculationService {
         /**
          * Save output to files
          * */
-//        Path path = Paths.get(System.getProperty("user.home"));
-//        if(!Files.exists(Paths.get(path.toString(), "images")))
-//            Files.createDirectory(Paths.get(path.toString(), "images"));
-//
-//        ImageIO.write(trainingImage, "jpg",
-//                new File(Paths.get(path.toString(), "images") + File.separator + "p" + imageId));
-//        ImageIO.write(finalImage, "jpg",
-//                new File(Paths.get(path.toString(), "images") + File.separator + "f" + imageId));
-        ImageIO.write(trainingImage, "jpg", new File("src/main/resources/static/assets/p" + imageId));
-        ImageIO.write(finalImage, "jpg", new File("src/main/resources/static/assets/f" + imageId));
+        Path path = Paths.get(System.getProperty("user.home"));
+        if(!Files.exists(Paths.get(path.toString(), "images")))
+            Files.createDirectory(Paths.get(path.toString(), "images"));
+
+        ImageIO.write(trainingImage, "jpg",
+                new File(Paths.get(path.toString(), "images") + File.separator + "p" + imageId));
+        ImageIO.write(finalImage, "jpg",
+                new File(Paths.get(path.toString(), "images") + File.separator + "f" + imageId));
+//        ImageIO.write(trainingImage, "jpg", new File("src/main/resources/static/assets/p" + imageId));
+//        ImageIO.write(finalImage, "jpg", new File("src/main/resources/static/assets/f" + imageId));
     }
 }

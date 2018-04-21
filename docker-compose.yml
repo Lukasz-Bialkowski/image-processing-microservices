@@ -16,25 +16,25 @@ services:
     logging:
       driver: json-file
 
-#  config-server:
-#    container_name: config-server   # Container name
-#    build:
-#      context: ./config-server/     # Dockerfile path
-#      dockerfile: Dockerfile        # Dockerfile name
-#    image: config-server:latest     # Image name
-#    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
-#    expose:
-#      - 8888
-#    ports:
-#      - 8888:8888
-#    networks:
-#      - spring-cloud-network        # Named networks name specified below
-#    depends_on:
-#      - eureka-server
-#    volumes:
-#      - /home/lukas/Software/master-thesis-microservice/config-server/build/resources/main/config-repo:/opt/uni-master-microservice/config-repo # Named volume name specified below
-#    logging:
-#      driver: json-file             # Default is ‘json-file’ driver (alternatively ‘syslog’)
+  config-server:
+    container_name: config-server   # Container name
+    build:
+      context: ./config-server/     # Dockerfile path
+      dockerfile: Dockerfile        # Dockerfile name
+    image: config-server:latest     # Image name
+    entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+    networks:
+      - spring-cloud-network        # Named networks name specified below
+    depends_on:
+      - eureka-server
+    volumes:
+      - /home/lukas/Software/master-thesis-microservice/config-server/build/resources/main/config-repo:/opt/uni-master-microservice/config-repo # Named volume name specified below
+    logging:
+      driver: json-file             # Default is ‘json-file’ driver (alternatively ‘syslog’)
 
   worker-service:
     container_name: worker-service
@@ -80,9 +80,9 @@ services:
     image: gateway-service:latest
     entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
     expose:
-      - 80
+      - 8080
     ports:
-      - 80:80
+      - 8080:8080
     networks:
       - spring-cloud-network
     logging:

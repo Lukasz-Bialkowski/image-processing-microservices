@@ -38,7 +38,7 @@ app.controller('mainCtrl', function($scope, $resource, $state, $stateParams) {
     $scope.params = $stateParams;
     $scope.search = "";
 
-    $scope.appResource = $resource("/app/:operation/:image", {}, {
+    $scope.appResource = $resource("/worker-service/app/:operation/:image", {}, {
         getImage: {method: 'GET'},
         getImages: {method: 'GET', isArray: true},
         pwd: {method: 'GET'},
@@ -57,7 +57,7 @@ app.controller('mainCtrl', function($scope, $resource, $state, $stateParams) {
 
     $scope.processImage = function(image){
         $scope.appResource.processImage({operation: 'process', imageId: image, iterations: $scope.iterations, nodes: $scope.nodes
-        }, function(response) {
+        }).$promise.then( function(response) {
             $state.go('task', {
                 id:response.id,
                 ipAddress:response.ipAddress,

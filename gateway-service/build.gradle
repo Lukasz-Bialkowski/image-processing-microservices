@@ -1,6 +1,6 @@
 project.ext {
     APP_NAME="gateway-service"
-    SERVER_PORT=8081
+    SERVER_PORT=8080
 }
 
 dependencies {

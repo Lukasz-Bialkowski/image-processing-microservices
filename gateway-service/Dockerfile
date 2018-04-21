@@ -4,6 +4,6 @@ COPY build/libs/gateway-service.jar /opt/uni-master-microservice/lib/
 COPY entrypoint.sh /opt/uni-master-microservice/bin/
 RUN chmod 755 /opt/uni-master-microservice/bin/entrypoint.sh
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["/opt/uni-master-microservice/bin/entrypoint.sh"]
