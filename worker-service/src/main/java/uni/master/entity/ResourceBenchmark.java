@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Enumeration;
 
 @Entity
@@ -24,25 +25,27 @@ public class ResourceBenchmark {
     @Getter private long TotalSwapSpaceSize;
     @Getter private long TotalPhysicalMemorySize;
     @Getter private long FreePhysicalMemorySize;
-    @Getter private long Timestamp;
+    @Getter private Date Timestamp;
     @Getter private long FreeSwapSpaceSize;
     @Getter private double SystemCpuLoad;
     @Getter private double ProcessCpuLoad;
+    @Getter private double SystemLoadAverage;
 
-    public ResourceBenchmark(long totalSwapSpaceSize, long totalPhysicalMemorySize, long freePhysicalMemorySize, long timestamp, long freeSwapSpaceSize, double systemCpuLoad, double processCpuLoad) {
+    public ResourceBenchmark(long totalSwapSpaceSize, long totalPhysicalMemorySize, long freePhysicalMemorySize, long timestamp, long freeSwapSpaceSize, double systemCpuLoad, double processCpuLoad, double systemLoadAverage) {
         try {
             ipAddress = ResourceBenchmark.getLocalHostLANAddress().getHostAddress();
             host = ResourceBenchmark.getLocalHostLANAddress().getHostName();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        TotalSwapSpaceSize = totalSwapSpaceSize;
-        TotalPhysicalMemorySize = totalPhysicalMemorySize;
-        FreePhysicalMemorySize = freePhysicalMemorySize;
-        Timestamp = timestamp;
-        FreeSwapSpaceSize = freeSwapSpaceSize;
-        SystemCpuLoad = systemCpuLoad;
-        ProcessCpuLoad = processCpuLoad;
+        TotalSwapSpaceSize = totalSwapSpaceSize / 1048576;
+        TotalPhysicalMemorySize = totalPhysicalMemorySize / 1048576;
+        FreePhysicalMemorySize = freePhysicalMemorySize / 1048576;
+        Timestamp = new Date(timestamp);
+        FreeSwapSpaceSize = freeSwapSpaceSize / 1048576;
+        SystemCpuLoad = ((double)((int)(systemCpuLoad * 10000)))/10000;
+        ProcessCpuLoad = ((double)((int)(processCpuLoad * 10000)))/10000;
+        SystemLoadAverage = systemLoadAverage;
     }
 
     @Override
@@ -58,6 +61,7 @@ public class ResourceBenchmark {
                 ", FreeSwapSpaceSize=" + FreeSwapSpaceSize +
                 ", SystemCpuLoad=" + SystemCpuLoad +
                 ", ProcessCpuLoad=" + ProcessCpuLoad +
+                ", SystemLoadAverage=" + SystemLoadAverage +
                 '}';
     }
 
