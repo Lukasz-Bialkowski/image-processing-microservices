@@ -43,10 +43,7 @@ app.controller('mainCtrl', function($scope, $resource, $state, $stateParams) {
         getImage: {method: 'GET'},
         getImages: {method: 'GET', isArray: true},
         pwd: {method: 'GET'},
-        processImage: {method: 'GET'},
-        getHistory: {method: 'GET', isArray: true},
-        getBenchmarkHistory: {method: 'GET', isArray: true},
-        searchList: {method: 'GET', isArray: true}
+        processImage: {method: 'GET'}
     });
 
     $scope.getImage = function(){
@@ -78,18 +75,24 @@ app.controller('mainCtrl', function($scope, $resource, $state, $stateParams) {
         $scope.appResource.pwd({operation: 'pwd'}, function(response) { console.log(response); });
     };
 
+    $scope.gatewayResource = $resource("/gateway/:operation", {}, {
+        getBenchmarkHistory: {method: 'GET', isArray: true},
+        getHistory: {method: 'GET', isArray: true},
+        searchList: {method: 'GET', isArray: true}
+    });
+
     $scope.getHistory = function(){
-        $scope.appResource.getHistory({operation: 'history'}, function(response) {
+        $scope.gatewayResource.getHistory({operation: 'history'}, function(response) {
+            $scope.history = response; });
+    };
+
+    $scope.searchList = function(){
+        $scope.gatewayResource.searchList({operation: 'searchList', userInput: $scope.search}, function(response) {
             $scope.history = response; });
     };
 
     $scope.getBenchmarkHistory = function(){
-        $scope.appResource.getBenchmarkHistory({operation: 'benchmark', size: $scope.pageSize}, function(response) {
+        $scope.gatewayResource.getBenchmarkHistory({operation: 'benchmark', size: $scope.pageSize}, function(response) {
             $scope.benchmarkHistory = response; });
-    };
-
-    $scope.searchList = function(){
-        $scope.appResource.searchList({operation: 'searchList', userInput: $scope.search}, function(response) {
-            $scope.history = response; });
     };
 });

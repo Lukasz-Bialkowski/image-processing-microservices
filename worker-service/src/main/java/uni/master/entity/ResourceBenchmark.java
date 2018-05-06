@@ -3,6 +3,7 @@ package uni.master.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,17 +20,17 @@ import java.util.Enumeration;
 public class ResourceBenchmark {
 
     @Id @GeneratedValue
-    @Getter Long id;
-    @Getter private String host;
-    @Getter private String ipAddress;
-    @Getter private long TotalSwapSpaceSize;
-    @Getter private long TotalPhysicalMemorySize;
-    @Getter private long FreePhysicalMemorySize;
-    @Getter private Date Timestamp;
-    @Getter private long FreeSwapSpaceSize;
-    @Getter private double SystemCpuLoad;
-    @Getter private double ProcessCpuLoad;
-    @Getter private double SystemLoadAverage;
+    @Getter @Setter Long id;
+    @Getter @Setter private String host;
+    @Getter @Setter private String ipAddress;
+    @Getter @Setter private long TotalSwapSpaceSize;
+    @Getter @Setter private long TotalPhysicalMemorySize;
+    @Getter @Setter private long FreePhysicalMemorySize;
+    @Getter @Setter private Date Timestamp;
+    @Getter @Setter private long FreeSwapSpaceSize;
+    @Getter @Setter private double SystemCpuLoad;
+    @Getter @Setter private double ProcessCpuLoad;
+    @Getter @Setter private double SystemLoadAverage;
 
     public ResourceBenchmark(long totalSwapSpaceSize, long totalPhysicalMemorySize, long freePhysicalMemorySize, long timestamp, long freeSwapSpaceSize, double systemCpuLoad, double processCpuLoad, double systemLoadAverage) {
         try {
