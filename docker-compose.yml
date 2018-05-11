@@ -80,9 +80,9 @@ services:
     image: gateway-service:latest
     entrypoint: /opt/uni-master-microservice/bin/entrypoint.sh
     expose:
-      - 8080
+      - 8081
     ports:
-      - 8080:8080
+      - 8081:8081
     networks:
       - spring-cloud-network
     logging:
