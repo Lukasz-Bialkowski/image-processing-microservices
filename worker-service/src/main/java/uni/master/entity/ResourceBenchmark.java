@@ -24,26 +24,29 @@ public class ResourceBenchmark {
     @Getter @Setter private String host;
     @Getter @Setter private String ipAddress;
     @Getter @Setter private long TotalSwapSpaceSize;
+    @Getter @Setter private long FreeSwapSpaceSize;
     @Getter @Setter private long TotalPhysicalMemorySize;
     @Getter @Setter private long FreePhysicalMemorySize;
+    @Getter @Setter private long UsedPhysicalMemorySize;
     @Getter @Setter private Date Timestamp;
-    @Getter @Setter private long FreeSwapSpaceSize;
     @Getter @Setter private double SystemCpuLoad;
     @Getter @Setter private double ProcessCpuLoad;
     @Getter @Setter private double SystemLoadAverage;
+    private static final long MEGABYTE = 1024L * 1024L;
 
-    public ResourceBenchmark(long totalSwapSpaceSize, long totalPhysicalMemorySize, long freePhysicalMemorySize, long timestamp, long freeSwapSpaceSize, double systemCpuLoad, double processCpuLoad, double systemLoadAverage) {
+    public ResourceBenchmark(long totalSwapSpaceSize, long totalPhysicalMemorySize, long freePhysicalMemorySize, long usedPhysicalMemorySize, long timestamp, long freeSwapSpaceSize, double systemCpuLoad, double processCpuLoad, double systemLoadAverage) {
         try {
             ipAddress = ResourceBenchmark.getLocalHostLANAddress().getHostAddress();
             host = ResourceBenchmark.getLocalHostLANAddress().getHostName();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        TotalSwapSpaceSize = totalSwapSpaceSize / 1048576;
-        TotalPhysicalMemorySize = totalPhysicalMemorySize / 1048576;
-        FreePhysicalMemorySize = freePhysicalMemorySize / 1048576;
+        TotalSwapSpaceSize = ResourceBenchmark.bytesToMegabytes(totalSwapSpaceSize);
+        TotalPhysicalMemorySize = ResourceBenchmark.bytesToMegabytes(totalPhysicalMemorySize);
+        FreePhysicalMemorySize = ResourceBenchmark.bytesToMegabytes(freePhysicalMemorySize);
+        UsedPhysicalMemorySize = ResourceBenchmark.bytesToMegabytes(usedPhysicalMemorySize);
         Timestamp = new Date(timestamp);
-        FreeSwapSpaceSize = freeSwapSpaceSize / 1048576;
+        FreeSwapSpaceSize = ResourceBenchmark.bytesToMegabytes(freeSwapSpaceSize);
         SystemCpuLoad = ((double)((int)(systemCpuLoad * 10000)))/10000;
         ProcessCpuLoad = ((double)((int)(processCpuLoad * 10000)))/10000;
         SystemLoadAverage = systemLoadAverage;
@@ -64,6 +67,10 @@ public class ResourceBenchmark {
                 ", ProcessCpuLoad=" + ProcessCpuLoad +
                 ", SystemLoadAverage=" + SystemLoadAverage +
                 '}';
+    }
+
+    private static long bytesToMegabytes(long bytes) {
+        return bytes / MEGABYTE;
     }
 
     private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
